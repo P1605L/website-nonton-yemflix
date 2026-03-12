@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nonton Film</title>
+    <!-- font google & ikon -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: #0f0f12;
+            color: #eaeef2;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+        }
+
+        /* ========== RESPONSIVE HEADER ========== */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #252530;
+            padding-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .logo h1 {
+            font-weight: 700;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ffb86b, #ff7ac6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        /* Search box - desktop first */
+        .search-box {
+            display: flex;
+            background: #1e1e26;
+            border-radius: 40px;
+            padding: 0.3rem 0.3rem 0.3rem 1.2rem;
+            align-items: center;
+            border: 1px solid #2f2f3a;
+            transition: 0.2s;
+            width: auto;
+            min-width: 320px;
+        }
+        
+        /* ========== MOBILE SEARCH ========== */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .logo h1 {
+                text-align: center;
+                font-size: 1.8rem;
+            }
+            
+            .search-box {
+                width: 100%;
+                min-width: unset;
+                padding: 0.2rem 0.2rem 0.2rem 1rem;
+            }
+            
+            .search-box input {
+                width: 100%;
+                font-size: 0.95rem;
+                padding: 0.6rem 0.5rem;
+            }
+            
+            .search-box button {
+                padding: 0.5rem 1rem;
+                white-space: nowrap;
+            }
+            
+            .search-box i {
+                display: none; /* Sembunyikan ikon search di mobile */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-box button {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.85rem;
+            }
+            
+            .search-box button i {
+                display: inline-block; /* Tampilkan ikon saja */
+                margin-right: 0;
+            }
+            
+            .search-box button span {
+                display: none; /* Sembunyikan teks "Cari" */
+            }
+        }
+
+        .search-box:focus-within {
+            border-color: #ff7ac6;
+            box-shadow: 0 0 0 2px rgba(255,122,198,0.2);
+        }
+        .search-box i {
+            color: #9b9bb5;
+            font-size: 1rem;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            padding: 0.7rem 0.8rem;
+            color: white;
+            font-size: 1rem;
+            width: 240px;
+            outline: none;
+        }
+        .search-box button {
+            background: #ff7ac6;
+            border: none;
+            color: #0f0f12;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 0.3px;
+        }
+        .search-box button:hover {
+            background: #ff9ed6;
+            transform: scale(1.02);
+        }
+
+        /* ========== RESPONSIVE FILTER CHIP ========== */
+        .filter-bar {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-bar {
+                gap: 0.5rem;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .filter-bar {
+                gap: 0.4rem;
+            }
+        }
+        
+        .chip {
+            background: #1a1a22;
+            padding: 0.5rem 1.3rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #2a2a35;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #bdbdd5;
+            white-space: nowrap;
+        }
+        
+        @media (max-width: 768px) {
+            .chip {
+                padding: 0.4rem 1rem;
+                font-size: 0.8rem;
+                flex: 0 1 auto;
+            }
+            
+            .chip i {
+                margin-right: 4px;
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .chip {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            
+            /* Chip bisa di-scroll horizontal jika terlalu banyak */
+            .filter-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                padding-bottom: 0.5rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+            
+            .filter-bar::-webkit-scrollbar {
+                height: 3px;
+            }
+            
+            .filter-bar::-webkit-scrollbar-thumb {
+                background: #ff7ac6;
+                border-radius: 10px;
+            }
+        }
+        
+        .chip i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        .chip.active {
+            background: #ff7ac6;
+            border-color: #ff7ac6;
+            color: #0f0f12;
+            font-weight: 600;
+        }
+        .chip:hover {
+            background: #2c2c38;
+            color: white;
+        }
+
+        /* ========== RESPONSIVE SECTION TITLE ========== */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 2rem 0 1.2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .section-title {
+                margin: 1.5rem 0 1rem 0;
+                gap: 8px;
+            }
+            
+            .section-title h2 {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .section-title h2 {
+                font-size: 1.1rem;
+            }
+            
+            .section-title span {
+                padding: 0.15rem 0.6rem;
+                font-size: 0.8rem;
+            }
+        }
+        
+        .section-title h2 {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        .section-title span {
+            background: #ff7ac6;
+            color: #0f0f12;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* ========== RESPONSIVE MOVIE GRID ========== */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.8rem 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        /* Desktop besar (4-5 kolom) */
+        @media (min-width: 1200px) {
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 2rem 1.5rem;
+            }
+        }
+        
+        /* Tablet (3-4 kolom) */
+        @media (max-width: 992px) {
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1.5rem 1rem;
+            }
+        }
+        
+        /* Mobile besar (2-3 kolom) */
+        @media (max-width: 768px) {
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1.2rem 0.8rem;
+            }
+            
+            .movie-info h3 {
+                font-size: 0.85rem;
+            }
+            
+            .movie-info .year {
+                font-size: 0.75rem;
+            }
+            
+            .rating-badge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+            }
+        }
+        
+        /* Mobile kecil (2 kolom) */
+        @media (max-width: 480px) {
+            .movie-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem 0.6rem;
+            }
+            
+            .movie-info {
+                padding: 0.6rem 0.5rem 0.8rem 0.5rem;
+            }
+            
+            .movie-info h3 {
+                font-size: 0.8rem;
+                white-space: normal; /* Boleh wrap untuk judul panjang */
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 1.3;
+            }
+            
+            .rating-badge {
+                top: 5px;
+                right: 5px;
+                font-size: 0.65rem;
+                padding: 0.15rem 0.4rem;
+            }
+            
+            .poster .no-poster {
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Untuk layar sangat kecil */
+        @media (max-width: 360px) {
+            .movie-grid {
+                gap: 0.8rem 0.4rem;
+            }
+            
+            .movie-info h3 {
+                font-size: 0.75rem;
+            }
+        }
+        
+        .movie-card {
+            background: #16161e;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 1px solid #262630;
+            box-shadow: 0 10px 15px -10px rgba(0,0,0,0.7);
+        }
+        
+        @media (max-width: 768px) {
+            .movie-card {
+                border-radius: 16px;
+            }
+            
+            .movie-card:hover {
+                transform: translateY(-3px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .movie-card {
+                border-radius: 12px;
+            }
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -8px black;
+            border-color: #ff7ac655;
+        }
+        .poster {
+            position: relative;
+            aspect-ratio: 2/3;
+            background: #0b0b10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .poster .no-poster {
+            color: #6f6f8a;
+            font-size: 0.8rem;
+            text-align: center;
+            padding: 1rem;
+        }
+        .rating-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #0f0f12ee;
+            backdrop-filter: blur(4px);
+            padding: 0.25rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #ffb86b;
+            color: #ffb86b;
+        }
+        .rating-badge i {
+            color: #ffb86b;
+            margin-right: 3px;
+            font-size: 0.6rem;
+        }
+        .movie-info {
+            padding: 0.8rem 0.7rem 1rem 0.7rem;
+        }
+        .movie-info h3 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .movie-info .year {
+            color: #8f8fb1;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Loading dan error state */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #9f9fbf;
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+        
+        @media (max-width: 768px) {
+            .loading {
+                padding: 2rem;
+                font-size: 1rem;
+            }
+        }
+        
+        .loading i {
+            margin-right: 10px;
+        }
+
+        /* ========== RESPONSIVE FOOTER ========== */
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #5f5f7a;
+            font-size: 0.85rem;
+            border-top: 1px solid #1f1f2a;
+            padding-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            footer {
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+                font-size: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            footer {
+                margin-top: 1.5rem;
+                padding-top: 1rem;
+                font-size: 0.7rem;
+            }
+        }
+        
+        /* Utility class untuk touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            /* Untuk perangkat touch, hover effect dikurangi */
+            .movie-card:hover {
+                transform: none;
+            }
+            
+            .chip:hover {
+                background: #1a1a22;
+                color: #bdbdd5;
+            }
+            
+            .chip:active {
+                background: #ff7ac6;
+                color: #0f0f12;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- header + search -->
+        <div class="header">
+            <div class="logo">
+                <h1><i class="fas fa-clapperboard" style="margin-right: 8px; background: none; -webkit-text-fill-color: #ff7ac6;"></i> Yemflix</h1>
+            </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Cari film..." value="">
+                <button id="searchBtn"><i class="fas fa-arrow-right"></i> Cari</button>
+            </div>
+        </div>
+
+        <!-- filter chips -->
+        <div class="filter-bar">
+            <div class="chip active" data-filter="now_playing"><i class="fas fa-play"></i> Sedang Tayang</div>
+            <div class="chip" data-filter="popular"><i class="fas fa-fire"></i> Populer</div>
+            <div class="chip" data-filter="top_rated"><i class="fas fa-star"></i> Rating Tertinggi</div>
+            <div class="chip" data-filter="upcoming"><i class="fas fa-calendar-alt"></i> Mendatang</div>
+        </div>
+
+        <!-- judul dinamis -->
+        <div class="section-title" id="sectionTitle">
+            <h2 id="categoryLabel">Sedang Tayang</h2>
+            <span id="movieCount">0</span>
+        </div>
+
+        <!-- grid film -->
+        <div id="movieGrid" class="movie-grid">
+            <div class="loading"><i class="fas fa-spinner fa-pulse"></i> Memuat film...</div>
+        </div>
+
+        <footer>
+            <p>🎬 menggunakan TMDB API · data real-time · akses token disertakan</p>
+        </footer>
+    </div>
+
+ <script>
+(function() {
+    // ---- API KEY KAMU ----
+    const API_KEY = "3a574b5464597d5411ccf557a55cab0b";
+    
+    // base url & gambar
+    const BASE_URL = 'https://api.themoviedb.org/3';
+    const IMG_BASE = 'https://image.tmdb.org/t/p/w342';
+    const base_url = 'https://movie.tmdb.org/t/p/w342';
+    // element references
+    const movieGrid = document.getElementById('movieGrid');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const chips = document.querySelectorAll('.chip');
+    const categoryLabel = document.getElementById('categoryLabel');
+    const movieCountSpan = document.getElementById('movieCount');
+
+    // state
+    let activeFilter = 'now_playing';
+    let currentQuery = '';
+
+    // --- fungsi fetch dengan API KEY ---
+    async function fetchMovies(endpoint, params = {}) {
+        const url = new URL(`${BASE_URL}${endpoint}`);
+        
+        // Tambahkan API key ke parameter
+        url.searchParams.append('api_key', API_KEY);
+        
+        // Tambah parameter lainnya
+        Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+        
+        try {
+            const res = await fetch(url);
+            if (!res.ok) {
+                throw new Error(`HTTP error ${res.status}`);
+            }
+            const data = await res.json();
+            return data;
+        } catch (err) {
+            console.error(err);
+            return null;
+        }
+    }
+
+    // render film dari array results (sama seperti sebelumnya)
+    function renderMovies(movies) {
+        if (!movies || movies.length === 0) {
+            movieGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; color:#9f9fbf;"><i class="fas fa-film-slash"></i> Tidak ada film ditemukan.</div>`;
+            movieCountSpan.textContent = '0';
+            return;
+        }
+
+        let html = '';
+        movies.forEach(movie => {
+            const title = movie.title || movie.name || 'Judul tidak ada';
+            const year = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
+            const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '?';
+            const posterPath = movie.poster_path 
+                ? `${IMG_BASE}${movie.poster_path}` 
+                : null;
+
+            html += `
+                <div class="movie-card" title="${title.replace(/"/g, '&quot;')}">
+                    <div class="poster">
+                        ${posterPath 
+                            ? `<img src="${posterPath}" alt="${title} poster" loading="lazy">` 
+                            : `<div class="no-poster"><i class="fas fa-image" style="font-size:2rem; opacity:0.4;"></i><br>no poster</div>`}
+                        <div class="rating-badge"><i class="fas fa-star"></i> ${rating}</div>
+                    </div>
+                    <div class="movie-info">
+                        <h3>${title.length > 25 ? title.slice(0,22)+'...' : title}</h3>
+                        <span class="year">${year}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        movieGrid.innerHTML = html;
+        movieCountSpan.textContent = movies.length;
+    }
+
+    // memuat berdasarkan filter atau search
+    async function loadMovies(filter = activeFilter, query = '') {
+        movieGrid.innerHTML = `<div class="loading"><i class="fas fa-spinner fa-pulse"></i> Mencari film...</div>`;
+
+        let data;
+        if (query.trim() !== '') {
+            // endpoint search
+            data = await fetchMovies('/search/movie', { query: query, language: 'id-ID', page: 1 });
+            categoryLabel.textContent = `Pencarian: "${query}"`;
+        } else {
+            // filter berdasarkan kategori
+            let endpoint = '';
+            let label = '';
+            switch (filter) {
+                case 'now_playing':
+                    endpoint = '/movie/now_playing';
+                    label = 'Sedang Tayang';
+                    break;
+                case 'popular':
+                    endpoint = '/movie/popular';
+                    label = 'Populer';
+                    break;
+                case 'top_rated':
+                    endpoint = '/movie/top_rated';
+                    label = 'Rating Tertinggi';
+                    break;
+                case 'upcoming':
+                    endpoint = '/movie/upcoming';
+                    label = 'Mendatang';
+                    break;
+                default:
+                    endpoint = '/movie/now_playing';
+                    label = 'Sedang Tayang';
+            }
+            categoryLabel.textContent = label;
+            data = await fetchMovies(endpoint, { language: 'id-ID', page: 1 });
+        }
+
+        if (data && data.results) {
+            renderMovies(data.results);
+        } else {
+            movieGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:3rem; color:#f77;"><i class="fas fa-exclamation-triangle"></i> Gagal memuat data. Periksa API Key / koneksi.</div>`;
+            movieCountSpan.textContent = '0';
+        }
+    }
+
+    // handler untuk chip filter
+    chips.forEach(chip => {
+        chip.addEventListener('click', (e) => {
+            const filter = chip.dataset.filter;
+            if (!filter) return;
+
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+
+            searchInput.value = '';
+            currentQuery = '';
+            activeFilter = filter;
+            loadMovies(activeFilter, '');
+        });
+    });
+
+    // handler search
+    function performSearch() {
+        const query = searchInput.value.trim();
+        if (query === '') {
+            chips.forEach(c => {
+                if (c.dataset.filter === activeFilter) c.classList.add('active');
+                else c.classList.remove('active');
+            });
+            loadMovies(activeFilter, '');
+        } else {
+            chips.forEach(c => c.classList.remove('active'));
+            currentQuery = query;
+            loadMovies('', query);
+        }
+    }
+
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
+    });
+
+    // inisialisasi pertama
+    loadMovies('now_playing', '');
+})();
+</script>
+</body>
+</html>
